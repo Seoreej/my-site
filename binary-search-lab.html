@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="탐색 범위를 반씩 좁히며 배우는 이진탐색. 한 단계씩 살펴보고, 다음 범위를 직접 예측해 보세요.">
+<meta name="theme-color" content="#324fe8">
+<title>반씩 · 이진탐색 실험실</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23324fe8'/%3E%3Cpath d='M8 8h7v16H8z' fill='white'/%3E%3Cpath d='M18 8h6v16h-6z' fill='%2399aaff'/%3E%3C/svg%3E">
+<style>
+:root{font-family:Inter,"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;color:#182440;background:#f4f6fb;font-synthesis:none;--blue:#324fe8;--ink:#182440;--muted:#5d6b85;--line:#dce2ee;--green:#0c7953;--orange:#b85512}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button,select{cursor:pointer}button{border:1px solid var(--line);background:white;color:var(--ink);border-radius:10px;min-height:44px;padding:10px 16px;font-weight:700;transition:background .15s,transform .15s}button:hover:not(:disabled){background:#eef1ff;border-color:#aab7fc}button:active:not(:disabled){transform:translateY(1px)}button:disabled{opacity:.42;cursor:not-allowed}button.primary{background:var(--blue);border-color:var(--blue);color:white}button.primary:hover:not(:disabled){background:#223dcc}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #f2ab42;outline-offset:4px}input,select,textarea{border:1px solid #bfc9db;border-radius:9px;padding:10px 12px;min-height:44px;color:var(--ink);background:white}a{color:var(--blue)}.topbar{height:78px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(28px,calc((100vw - 1376px)/2));gap:18px}.brand{display:flex;align-items:center;gap:11px;font-weight:850;font-size:23px;letter-spacing:-1px}.brandmark{display:flex;gap:4px;background:var(--blue);padding:9px;border-radius:11px;width:37px;height:37px}.brandmark i{width:8px;background:white;border-radius:1px}.brandmark i+ i{opacity:.4}.brand small{font-size:14px;letter-spacing:0;font-weight:500;color:var(--muted);margin-left:7px}.course{font-size:14px;color:var(--muted)}.course b{color:var(--blue);margin-right:10px;font-size:12px;letter-spacing:1.5px}.page{max-width:1432px;margin:auto;padding:34px 28px 26px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:27px}.eyebrow{font-size:12px;letter-spacing:1.8px;font-weight:800;color:var(--blue);margin:0 0 10px}h1{font-size:32px;letter-spacing:-1.5px;margin:0 0 9px;line-height:1.4}h1 em{color:var(--blue);font-style:normal}.intro p{color:var(--muted);font-size:16px;margin:0;line-height:1.7}.principle{background:#e8edff;border:1px solid #d5defd;border-radius:9px;padding:11px 16px;font-size:14px;white-space:nowrap;color:#3045a6}.tabs{display:flex;gap:5px;background:#e9edf5;border-radius:12px;padding:5px;max-width:430px;margin-bottom:23px}.tabs button{flex:1;background:transparent;border:0;font-size:15px;color:var(--muted)}.tabs button[aria-pressed=true]{background:#fff;color:var(--blue);box-shadow:0 2px 6px #172c5310}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px}.card{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden}.setup{padding:22px 25px 18px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}.field{display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:700}.field input{width:118px;font-size:18px;font-weight:800;color:var(--blue)}.field select{min-width:105px}.setup .shuffle{margin-left:auto;font-size:14px;font-weight:600}.stage{padding:27px 25px 24px;background-image:radial-gradient(#d6dded .8px,transparent .8px);background-size:16px 16px}.stage-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.small-title{font-size:14px;font-weight:700;margin:0}.step-badge{font-size:13px;font-weight:700;background:white;border:1px solid var(--line);border-radius:6px;padding:6px 10px}.target-line{text-align:center;margin:30px 0 11px;font-size:16px;color:var(--muted)}.target-line strong{display:inline-block;min-width:48px;padding:4px 10px;background:#e9edff;color:var(--blue);border-radius:7px;font-size:24px;margin:0 6px}.array-scroll{overflow-x:auto;overscroll-behavior-x:contain;padding:22px 2px 8px;scrollbar-width:thin}.array{display:grid;grid-template-columns:repeat(var(--count),minmax(39px,1fr));gap:5px;min-width:calc(var(--count)*44px - 5px)}.cell{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}.pointer{height:22px;line-height:22px;font-size:12px;font-weight:800;color:var(--blue);white-space:nowrap}.number{height:57px;width:100%;border:1px solid #bccbf9;background:#eef2ff;border-radius:9px;display:grid;place-items:center;font-size:20px;font-weight:750;transition:background .3s,border-color .3s,opacity .3s,transform .3s;color:#314ebd;position:relative}.cell.excluded .number{background:#edf0f5;color:#8792a6;border-color:#e1e6ee}.cell.excluded .number:after{content:"";position:absolute;left:22%;right:22%;height:1px;top:50%;background:#8792a6}.cell.mid .number{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 5px 12px #324fe835;transform:translateY(-3px)}.cell.found .number{background:var(--green);border-color:var(--green);color:white;transform:translateY(-3px)}.cell .index{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#6a7891}.index-note{font-size:12px;color:#68768e;margin:9px 0 0}.legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:26px 0 6px;font-size:13px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:6px}.swatch{width:11px;height:11px;background:#eef2ff;border:1px solid #bccbf9;border-radius:3px}.swatch.mid{background:var(--blue);border-color:var(--blue)}.swatch.out{background:#edf0f5;border-color:#dce2ec}.swatch.ok{background:var(--green);border-color:var(--green)}.transport{border-top:1px solid var(--line);padding:18px 25px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}.transport button{font-size:14px}.transport .speed{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.speed select{font-size:13px;padding:8px;min-height:40px}.keyboard{padding:0 25px 15px;color:#738199;font-size:12px;margin:0}.side{display:flex;flex-direction:column;gap:18px}.decision{padding:24px;background:#fff;flex:1}.section-label{font-size:12px;font-weight:800;letter-spacing:1.3px;color:var(--blue);margin:0 0 13px}.decision h2{font-size:20px;letter-spacing:-.5px;margin:0 0 16px}.comparison{display:flex;align-items:center;justify-content:center;gap:17px;border:1px solid #dce3fa;background:#f4f6ff;border-radius:12px;padding:20px 8px;margin-bottom:18px}.operand{text-align:center}.operand span{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.operand strong{font-size:32px;letter-spacing:-1px;line-height:1.3}.symbol{font-size:24px;color:var(--blue);padding-top:22px}.explanation{font-size:15px;line-height:1.8;margin:0;min-height:81px;word-break:keep-all}.calculation{background:#f5f7fb;padding:14px;border-radius:9px;font-size:13px;color:var(--muted);line-height:1.8;margin-top:20px}.calculation code{font-family:ui-monospace,Consolas,monospace;color:var(--ink);font-size:13px}.counters{display:grid;grid-template-columns:1fr 1fr;padding:19px 5px;text-align:center}.counter+.counter{border-left:1px solid var(--line)}.counter span{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}.counter strong{font-size:26px;color:var(--ink)}.counter small{font-size:14px;font-weight:500;color:var(--muted);margin-left:3px}.lower{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:22px;margin-top:22px}.history{padding:23px 25px}.title-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.title-row h2{font-size:17px;margin:0;letter-spacing:-.4px}.title-row span{font-size:12px;color:var(--muted)}.empty{padding:15px 0;color:var(--muted);font-size:14px;line-height:1.8}.history-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none}.history-row{display:grid;grid-template-columns:32px minmax(0,1fr) 132px;align-items:center;gap:12px;padding-top:12px;border-top:1px solid #edf0f6;font-size:14px;line-height:1.65}.history-row:first-child{padding-top:0;border-top:0}.step-num{width:28px;height:28px;border-radius:50%;background:#eef1fd;color:var(--blue);display:grid;place-items:center;font-size:12px;font-weight:700}.history-row small{display:block;color:var(--muted);font-size:12px}.mini-array{display:flex;gap:3px;height:18px}.mini-array i{flex:1;min-width:1px;background:#e8ecf3;border-radius:2px}.mini-array i.live{background:#bbc8ff}.mini-array i.check{background:var(--blue)}.mini-array i.match{background:var(--green)}.concept{background:#edf1ff;border-color:#dce3fc;padding:23px 24px;align-self:start}.concept h2{font-size:17px;margin:0 0 12px}.concept p{font-size:14px;line-height:1.85;margin:0;color:#405174;word-break:keep-all}.concept .halve{font-family:ui-monospace,Consolas,monospace;color:var(--blue);font-size:20px;font-weight:750;letter-spacing:1px;margin:14px 0}.custom{margin-top:22px;padding:0 24px}.custom summary,.code-view summary{cursor:pointer;font-size:14px;font-weight:700;min-height:54px;display:flex;align-items:center;justify-content:space-between}.custom summary:after,.code-view summary:after{content:"＋";font-size:20px;color:var(--muted)}details[open]>summary:after{content:"−"}.custom-body{padding:0 0 20px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}.custom-body .field{flex:1;min-width:240px}.custom-body input{width:100%;font-size:14px;font-weight:500;color:var(--ink)}.custom-body p{width:100%;margin:0;color:var(--muted);font-size:13px;line-height:1.7}.error{color:#b33627!important}.code-view{margin-top:16px;padding:0 24px}.code-view ol{margin:0 0 22px;padding:0;list-style:none;font-size:14px;line-height:2.1;counter-reset:code;overflow-x:auto}.code-view li{white-space:pre;counter-increment:code;padding:0 10px;border-radius:5px;font-family:ui-monospace,Consolas,"Malgun Gothic",monospace}.code-view li:before{content:counter(code);display:inline-block;width:25px;color:#8290a7;font-size:12px}.code-view li.active{background:#e8edff;color:var(--blue)}.code-view p{font-size:13px;color:var(--muted);line-height:1.7}.prediction{padding:0 25px 20px;background:#fff}.prediction p{font-size:15px;margin:0 0 12px;line-height:1.6}.choices{display:flex;gap:8px}.choices button{flex:1;padding:10px 8px;font-size:14px}.feedback{font-size:14px;line-height:1.7;margin:13px 0 0;color:var(--green);font-weight:600}.feedback.wrong{color:#b34a20}.toast{min-height:23px;font-size:13px;color:var(--muted);padding:9px 25px 0}.footer{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px;line-height:1.8;padding:25px 2px 0}.footer b{font-weight:650;color:#445574}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(min-width:1500px){.number{height:64px}}@media(max-width:1100px){.workspace,.lower{grid-template-columns:minmax(0,1fr) 290px}.stage,.setup,.transport,.history{padding-left:19px;padding-right:19px}.setup{gap:10px}.setup .shuffle{margin-left:0}.transport .speed{margin-left:0}.decision{padding:21px}.intro{align-items:flex-start}.principle{margin-top:8px}.brand small{display:none}}@media(max-width:860px){.workspace,.lower{grid-template-columns:1fr}.side{display:grid;grid-template-columns:minmax(0,1fr) 160px;align-items:start}.counters{grid-template-columns:1fr}.counter+.counter{border-left:0;border-top:1px solid var(--line);margin-top:16px;padding-top:16px}.comparison{float:left;width:190px;margin:0 20px 10px 0}.decision .calculation{clear:both}.explanation{min-height:0}.concept .halve{margin:10px 0}.intro{display:block}.principle{display:inline-block;margin-top:14px}.course{font-size:12px}.course b{display:none}.lower{margin-top:18px}}@media(max-width:520px){.topbar{height:66px;padding:0 18px}.brand{font-size:21px}.course{max-width:90px;text-align:right}.page{padding:24px 16px}.intro{margin-bottom:22px}h1{font-size:26px}.intro p{font-size:15px}.principle{font-size:13px}.tabs{margin-bottom:18px}.tabs button{font-size:14px;padding:10px}.setup{padding:17px 16px;gap:12px}.setup .shuffle{margin-left:auto;padding:10px}.field input{width:105px}.field select{min-width:90px;width:90px}.field{font-size:13px}.stage{padding:20px 16px}.target-line{margin-top:21px}.legend{font-size:12px;gap:10px}.transport{padding:15px 16px;gap:7px}.transport button{padding:10px 11px}.transport .speed{width:100%;justify-content:flex-end}.keyboard{display:none}.side{grid-template-columns:1fr;gap:14px}.counters{grid-template-columns:1fr 1fr;grid-row:1;padding:16px 5px}.counter+.counter{border-top:0;border-left:1px solid var(--line);margin:0;padding:0}.decision{padding:20px}.decision h2{font-size:18px}.comparison{width:150px;gap:10px;margin-right:14px;padding:16px 8px}.operand strong{font-size:27px}.explanation{font-size:14px}.decision .calculation{margin-top:14px}.history{padding:20px}.title-row{gap:8px}.title-row span{font-size:12px}.history-row{grid-template-columns:27px minmax(0,1fr);gap:10px}.mini-array{grid-column:2;height:10px;max-width:200px}.custom,.code-view{padding:0 18px}.prediction{padding:0 16px 18px}.choices{gap:6px}.choices button{font-size:13px}.footer{display:block}.footer span{display:block;margin-top:6px}.toast{padding-left:16px;padding-right:16px}.index-note{font-size:12px}}
+
+/* Keep the array and the Python trace in the same learning workspace. */
+.topbar{height:64px}
+.page{max-width:1560px;padding-top:16px}
+.intro{margin-bottom:12px;align-items:center}
+.intro .eyebrow{display:none}
+.intro p{font-size:16px;line-height:1.5}
+h1{font-size:26px;line-height:1.3;margin-bottom:5px}
+.tabs{margin-bottom:12px}
+.workspace{grid-template-columns:minmax(0,1.15fr) minmax(450px,1fr);grid-template-areas:"visual code" "detail code";gap:18px;align-items:start}
+.visualization{grid-area:visual;min-width:0}
+.setup{padding:12px 20px;gap:10px}
+.stage{padding:16px 20px}
+.target-line{margin:10px 0 5px}
+.array-scroll{padding-top:10px}
+.array{grid-template-columns:repeat(var(--count),minmax(36px,1fr));gap:3px;min-width:calc(var(--count)*39px - 3px)}
+.number{height:50px;font-size:18px}
+.legend{margin:12px 0 0;gap:14px}
+.transport{padding:14px 20px;gap:7px}
+.transport .speed{margin-left:auto}
+.transport button{padding:9px 11px}
+.keyboard{padding:0 20px 12px}
+.toast{padding:8px 20px 0}
+.toast:empty{display:none}
+.workspace .code-view{grid-area:code;position:sticky;top:18px;min-width:0;margin:0;padding:20px;align-self:start}
+.code-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.code-heading h2{font-size:17px;letter-spacing:-.3px;margin:0;line-height:1.5}
+.language-tag{font-size:12px;font-weight:700;color:var(--blue);background:#edf1ff;padding:4px 9px;border-radius:6px}
+.code-view .code-caption{display:flex;align-items:center;gap:7px;font-size:14px;line-height:1.6;margin:9px 0 15px}
+.code-key{width:12px;height:12px;border-left:3px solid var(--blue);background:#e8edff;flex:none}
+.code-view ol{margin:0;font-size:14px;line-height:1.7;padding:10px 0;background:#f7f9fd;border:1px solid #e4e9f2;border-radius:10px;overflow-x:auto}
+.code-view li{padding:0 10px 0 7px;border-left:3px solid transparent;border-radius:0;min-width:max-content}
+.code-view li:before{width:24px}
+.code-view li.active{background:#e6ecff;border-left-color:var(--blue);color:#233bb8;font-weight:700}
+.code-view .code-glossary{font-size:14px;line-height:1.65;margin:14px 0 0;word-break:keep-all}
+.workspace .side{grid-area:detail;display:grid;grid-template-columns:minmax(0,1fr) 124px;gap:14px;align-items:start;min-width:0}
+.workspace .decision{padding:18px;min-width:0}
+.workspace .decision .section-label{display:none}
+.workspace .decision h2{font-size:17px;margin:0 0 12px}
+.workspace .comparison{float:left;width:148px;gap:10px;padding:12px 8px;margin:0 14px 12px 0}
+.workspace .operand strong{font-size:25px}
+.workspace .symbol{padding-top:18px;font-size:20px}
+.workspace .explanation{font-size:14px;line-height:1.8;min-height:0}
+.workspace .calculation{clear:both;margin-top:12px;padding:10px 12px}
+.workspace .counters{display:grid;grid-template-columns:1fr;grid-row:auto;padding:16px 8px}
+.workspace .counter+.counter{border-left:0;border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+.workspace .counter strong{font-size:24px}
+.lower{grid-template-columns:minmax(0,1.15fr) minmax(450px,1fr);margin-top:18px;gap:18px}
+@media(max-width:1120px){
+ .workspace{grid-template-columns:minmax(0,1fr);grid-template-areas:"visual" "code" "detail"}
+ .workspace .code-view{position:static}
+ .workspace .side{grid-template-columns:minmax(0,1fr) 200px}
+ .workspace .counters{grid-template-columns:1fr 1fr;padding:18px 8px}
+ .workspace .counter+.counter{border-top:0;border-left:1px solid var(--line);margin:0;padding:0}
+ .lower{grid-template-columns:minmax(0,1fr) 300px}
+}
+@media(max-width:680px){
+ .page{padding:20px 16px}
+ .intro{display:block}
+ h1{font-size:25px}
+ .principle{margin-top:10px}
+ .workspace,.lower{gap:14px}
+ .setup{padding:15px 16px}
+ .stage{padding:17px 16px}
+ .transport{padding:12px 16px}
+ .transport .speed{width:auto;margin-left:auto}
+ .workspace .code-view{padding:17px 14px}
+ .code-heading h2{font-size:16px}
+ .code-view .code-caption{font-size:14px;margin-bottom:12px}
+ .code-view .code-glossary{font-size:14px}
+ .workspace .side,.lower{grid-template-columns:minmax(0,1fr)}
+ .workspace .counters{grid-row:2}
+}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="brand"><span class="brandmark" aria-hidden="true"><i></i><i></i></span>이진탐색 실험실</div></header>
+<main class="page">
+<section class="intro"><div><div class="eyebrow">BINARY SEARCH</div><p>찾는 수와 가운데 값을 비교하며 탐색 범위가 줄어드는 과정을 살펴보세요.</p></div><div class="principle">먼저 기억해요 &nbsp; <b>이진탐색은 정렬된 배열에서!</b></div></section>
+<div class="tabs" role="group" aria-label="학습 모드"><button id="observeMode" type="button" aria-pressed="true">01 &nbsp; 과정 살펴보기</button><button id="predictMode" type="button" aria-pressed="false">02 &nbsp; 다음 범위 맞히기</button></div>
+<div class="workspace">
+<section class="card visualization" aria-label="이진탐색 시각화">
+<form id="setupForm" class="setup"><label class="field" for="target">찾을 숫자<input id="target" type="number" value="37" min="-999" max="999" step="1" required></label><button type="submit" class="primary">탐색 준비</button><label class="field" for="size">배열 크기<select id="size"><option value="7">7개</option><option value="15" selected>15개</option><option value="31">31개</option></select></label><button type="button" id="shuffle" class="shuffle">↻ &nbsp; 새 배열</button></form>
+<div id="notice" class="toast" role="status"></div>
+<div class="stage"><div class="stage-heading"><p class="small-title">오름차순으로 정렬된 배열</p><span id="stepBadge" class="step-badge">탐색 준비</span></div><p class="target-line">우리가 찾는 숫자 <strong id="targetDisplay">37</strong></p><div class="array-scroll" tabindex="0" role="region" aria-label="배열 시각화. 좁은 화면에서는 좌우로 스크롤할 수 있습니다."><div id="array" class="array" style="--count:15"></div></div><p class="index-note">아래 작은 숫자는 위치 번호(인덱스)예요. 0부터 시작해요. · 배열을 좌우로 밀어 볼 수 있어요.</p><div class="legend"><span><i class="swatch"></i>탐색 범위</span><span><i class="swatch mid"></i>가운데</span><span><i class="swatch out"></i>제외</span><span><i class="swatch ok"></i>찾음</span></div></div>
+<div class="transport"><button id="reset" type="button" aria-label="처음으로">↺ 처음</button><button id="prev" type="button">← 이전</button><button id="next" type="button" class="primary">한 단계 →</button><button id="play" type="button">▶ 자동 재생</button><label class="speed">속도<select id="speed" aria-label="자동 재생 간격"><option value="2400">느리게</option><option value="1400" selected>보통</option><option value="700">빠르게</option></select></label></div>
+<p class="keyboard">키보드 ← → 로도 단계를 이동할 수 있어요.</p>
+<div id="prediction" class="prediction" hidden><p id="predictionPrompt">가운데 값과 비교했을 때, 다음에는 어디를 살펴봐야 할까요?</p><div class="choices"><button type="button" data-choice="left">← 왼쪽 범위</button><button type="button" data-choice="found">같아요 · 찾음</button><button type="button" data-choice="right">오른쪽 범위 →</button></div><div id="feedback" class="feedback" role="status"></div></div>
+</section>
+<section class="card code-view" aria-labelledby="codeTitle"><div class="code-heading"><h2 id="codeTitle">알고리즘을 글로 따라가기</h2><span class="language-tag">Python</span></div><p class="code-caption"><span class="code-key" aria-hidden="true"></span>파란 줄과 배열의 변화를 함께 따라가세요.</p><ol id="code"><li data-line="0">def binary_search(arr, target):</li><li data-line="1">    low = 0</li><li data-line="2">    high = len(arr) - 1</li><li data-line="3"> </li><li data-line="4">    while low &lt;= high:</li><li data-line="5">        mid = (low + high) // 2</li><li data-line="6"> </li><li data-line="7">        if arr[mid] == target:</li><li data-line="8">            return mid              # 찾음! 위치를 반환</li><li data-line="9">        elif arr[mid] &lt; target:</li><li data-line="10">            low = mid + 1           # 오른쪽 절반만 남김</li><li data-line="11">        else:</li><li data-line="12">            high = mid - 1          # 왼쪽 절반만 남김</li><li data-line="13"> </li><li data-line="14">    return -1                       # 없음</li></ol><p class="code-glossary"><code>arr</code>는 정렬된 배열, <code>target</code>은 찾을 숫자예요. <code>low</code>와 <code>high</code>는 각각 왼쪽(L)·오른쪽(R) 경계이고, <code>// 2</code>는 2로 나눈 몫을 구해요.</p></section>
+<aside class="side"><section class="card decision" aria-label="현재 단계 설명"><div class="section-label">THINK STEP BY STEP</div><h2 id="decisionTitle">가운데 값부터 살펴봐요</h2><div class="comparison"><div class="operand"><span>찾는 수</span><strong id="compareTarget">37</strong></div><div id="compareSymbol" class="symbol">?</div><div class="operand"><span>가운데 값</span><strong id="compareMid">42</strong></div></div><p id="explanation" class="explanation" aria-live="polite"></p><div id="calculation" class="calculation"></div></section><section class="card counters" aria-label="탐색 현황"><div class="counter"><span>비교한 횟수</span><strong id="count">0</strong><small>번</small></div><div class="counter"><span>남은 후보</span><strong id="remaining">15</strong><small>개</small></div></section></aside>
+</div>
+<div class="lower"><section class="card history"><div class="title-row"><h2>범위가 줄어든 발자취</h2><span>비교 → 판단 → 범위 줄이기</span></div><p id="emptyHistory" class="empty">아직 비교하지 않았어요.<br>‘한 단계 →’를 누르면 첫 번째 비교가 기록돼요.</p><ol id="history" class="history-list"></ol></section><section class="card concept"><h2>왜 이렇게 빠를까요?</h2><p>한 번 비교할 때마다 가운데 값과 필요 없는 절반을 제외할 수 있어요.</p><div id="halve" class="halve">15 → 7 → 3 → 1</div><p id="bound">15개의 숫자는 최대 4번 비교하면 찾거나, 없다는 것을 알 수 있어요.</p></section></div>
+<details class="card custom"><summary>내가 만든 배열로 실험하기</summary><form id="customForm" class="custom-body"><label class="field" for="customArray">숫자를 쉼표 또는 공백으로 구분해 넣으세요<input id="customArray" type="text" placeholder="예: 4, 9, 15, 23, 38, 51, 67" maxlength="220" autocomplete="off"></label><button type="submit">배열 적용</button><p id="customHelp" role="status">−999부터 999까지 정수를 1~31개 넣을 수 있어요. 오름차순으로 자동 정렬해요. 중복된 숫자는 그중 하나를 찾습니다.</p></form></details>
+<footer class="footer"></footer>
+</main>
+<script>
+'use strict';
+// Pure state transitions are shared by observation and prediction modes.
+const Search = {
+  initial(array, target) { return {left:0, right:array.length-1, mid:Math.floor((array.length-1)/2), status:'active', count:0, last:null}; },
+  next(array, target, s) {
+    if(s.status !== 'active') return s;
+    const value=array[s.mid], outcome=target===value?'found':target<value?'left':'right';
+    const last={left:s.left,right:s.right,mid:s.mid,value,outcome,count:s.count+1};
+    let left=s.left,right=s.right,status='active',mid=s.mid;
+    if(outcome==='found') status='found';
+    else {if(outcome==='left') right=mid-1;else left=mid+1;if(left>right){status='missing';mid=null;}else mid=Math.floor((left+right)/2);}
+    return {left,right,mid,status,count:s.count+1,last};
+  },
+  parse(text) {
+    const tokens=text.trim().split(/[\s,]+/).filter(Boolean);
+    if(!tokens.length||tokens.length>31) throw new Error('숫자를 1~31개 입력해 주세요.');
+    if(tokens.some(t=>!/^[-+]?\d+$/.test(t)||Number(t)<-999||Number(t)>999)) throw new Error('−999부터 999까지의 정수만 입력해 주세요.');
+    return tokens.map(Number).sort((a,b)=>a-b);
+  }
+};
+const $=id=>document.getElementById(id);
+let array=[3,7,12,18,24,31,37,42,48,55,63,71,86,94,99],target=37,mode='observe',states=[Search.initial(array,target)],cursor=0,timer=null;
+const current=()=>states[cursor];
+function stop(){if(timer!==null){clearInterval(timer);timer=null;}$('play').textContent='▶ 자동 재생';}
+function restart(message=''){stop();states=[Search.initial(array,target)];cursor=0;$('target').value=target;$('notice').textContent=message;$('feedback').textContent='';render();}
+function advance(){if(current().status!=='active')return;states=states.slice(0,cursor+1);states.push(Search.next(array,target,current()));cursor++;if(current().status!=='active')stop();render();}
+function previous(){stop();if(cursor>0)cursor--;$('feedback').textContent='';render();}
+function render(){
+ const s=current(),done=s.status!=='active',found=s.status==='found';
+ $('array').style.setProperty('--count',array.length);
+ $('array').innerHTML=array.map((n,i)=>{
+   const excluded=s.status==='missing'||i<s.left||i>s.right||(found&&i!==s.mid);
+   const labels=[];if(!done&&i===s.left)labels.push('L');if(i===s.mid)labels.push(found?'✓':'M');if(!done&&i===s.right)labels.push('H');
+   const kind=found&&i===s.mid?'found':!done&&i===s.mid?'mid':excluded?'excluded':'';
+   const label=kind==='found'?'찾음':kind==='mid'?'가운데':excluded?'제외됨':'탐색 범위';
+   return `<div class="cell ${kind}" aria-label="위치 ${i}, 값 ${n}, ${label}"><span class="pointer" aria-hidden="true">${labels.join('·')}</span><div class="number" aria-hidden="true">${n}</div><span class="index" aria-hidden="true">${i}</span></div>`;
+ }).join('');
+ $('targetDisplay').textContent=target;$('compareTarget').textContent=target;$('compareMid').textContent=s.mid===null?'—':array[s.mid];
+ $('count').textContent=s.count;$('remaining').textContent=found?1:Math.max(0,s.right-s.left+1);
+ $('stepBadge').textContent=done?(found?'탐색 성공':'탐색 종료'):s.count===0?'탐색 준비':`${s.count+1}번째 비교 준비`;
+ $('compareSymbol').textContent=found?'=':s.status==='missing'?'∅':mode==='predict'?'?':target===array[s.mid]?'=':target<array[s.mid]?'<':'>';
+ if(found){$('decisionTitle').textContent='찾았어요!';$('explanation').textContent=`${s.count}번 비교해서 ${target}을 찾았어요. 위치 번호는 ${s.mid}, 앞에서 ${s.mid+1}번째 숫자예요.`;}
+ else if(s.status==='missing'){$('decisionTitle').textContent='배열에 없는 숫자예요';$('explanation').textContent=`${s.count}번 비교했지만 ${target}은 없어요. 왼쪽 경계가 오른쪽 경계를 넘어 남은 후보가 없어졌어요.`;}
+ else{$('decisionTitle').textContent=s.count===0?'가운데 값부터 살펴봐요':'줄어든 범위의 가운데는?';
+   $('explanation').textContent=mode==='predict'?`${target}과 가운데 값 ${array[s.mid]}을 비교해 보세요. 다음에 볼 범위는 어디인가요?`:
+   target===array[s.mid]?`찾는 수 ${target}과 가운데 값이 같아요. ‘한 단계 →’를 눌러 탐색을 마쳐 보세요.`:
+   target<array[s.mid]?`${target}은 가운데 값 ${array[s.mid]}보다 작아요. 가운데와 오른쪽을 제외하고 왼쪽을 살펴봐요.`:
+   `${target}은 가운데 값 ${array[s.mid]}보다 커요. 가운데와 왼쪽을 제외하고 오른쪽을 살펴봐요.`;}
+ $('calculation').innerHTML=s.status==='missing'?`남은 범위가 없어요<br><code>left = ${s.left}, right = ${s.right}</code>`:`L: 왼쪽 경계 · M: 가운데 · H: 오른쪽 경계<br><code>mid = ⌊(${s.left} + ${s.right}) / 2⌋ = ${s.mid}</code>`;
+ $('prev').disabled=cursor===0;$('reset').disabled=cursor===0&&!timer;$('next').disabled=done;$('play').disabled=done;
+ $('next').hidden=mode==='predict';$('play').hidden=mode==='predict';document.querySelector('.speed').hidden=mode==='predict';$('prediction').hidden=mode!=='predict';
+ document.querySelectorAll('[data-choice]').forEach(b=>b.disabled=done);
+ $('predictionPrompt').textContent=done?'탐색이 끝났어요. 새 숫자를 입력하거나 처음부터 다시 도전해 보세요.':'가운데 값과 비교했을 때, 다음에는 어디를 살펴봐야 할까요?';
+ $('observeMode').setAttribute('aria-pressed',String(mode==='observe'));$('predictMode').setAttribute('aria-pressed',String(mode==='predict'));
+ $('emptyHistory').hidden=cursor>0;$('emptyHistory').innerHTML=mode==='predict'?'아직 비교하지 않았어요.<br>다음 범위를 맞히면 비교가 기록돼요.':'아직 비교하지 않았어요.<br>‘한 단계 →’를 누르면 첫 번째 비교가 기록돼요.';
+ $('history').innerHTML=states.slice(1,cursor+1).map(st=>{const h=st.last;const rel=h.outcome==='found'?'=':h.outcome==='left'?'<':'>';const desc=h.outcome==='found'?`위치 ${h.mid}에서 찾음`:h.outcome==='left'?'가운데와 오른쪽 제외':'가운데와 왼쪽 제외';const remain=st.status==='found'?1:Math.max(0,st.right-st.left+1);return `<li class="history-row"><span class="step-num">${h.count}</span><div><b>${target} ${rel} ${h.value}</b> · ${desc}<small>위치 ${h.left}~${h.right} · 후보 ${h.right-h.left+1}개 → ${remain}개${st.status==='missing'?' · 찾는 수 없음':''}</small></div><div class="mini-array" aria-hidden="true">${array.map((_,i)=>`<i class="${i===h.mid?(h.outcome==='found'?'match':'check'):i>=h.left&&i<=h.right?'live':''}"></i>`).join('')}</div></li>`;}).join('');
+ const chain=[];for(let n=array.length;n>0;n=Math.floor(n/2))chain.push(n);$('halve').textContent=chain.join(' → ');$('bound').textContent=`${array.length}개의 숫자는 최대 ${Math.floor(Math.log2(array.length))+1}번 비교하면 찾거나, 없다는 것을 알 수 있어요.`;
+ const line=found?8:s.status==='missing'?14:s.count===0?5:s.last.outcome==='left'?12:10;document.querySelectorAll('#code li').forEach(el=>el.classList.toggle('active',Number(el.dataset.line)===line));
+}
+function readTarget(){const raw=$('target').value.trim(),n=Number(raw);if(!raw||!Number.isInteger(n)||n<-999||n>999){$('notice').textContent='찾을 숫자는 −999부터 999까지의 정수로 입력해 주세요.';return null;}return n;}
+$('setupForm').addEventListener('submit',e=>{e.preventDefault();const n=readTarget();if(n===null)return;target=n;restart('준비됐어요. 가운데 값부터 비교해 보세요.');});
+$('target').addEventListener('input',()=>{stop();$('notice').textContent='숫자를 바꾼 뒤 ‘탐색 준비’를 눌러 적용하세요.';});
+$('next').addEventListener('click',()=>{stop();advance();});$('prev').addEventListener('click',previous);$('reset').addEventListener('click',()=>restart('같은 배열과 숫자로 다시 시작해요.'));
+function autoplay(){stop();if(current().status!=='active')return;timer=setInterval(advance,Number($('speed').value));$('play').textContent='Ⅱ 일시 정지';$('reset').disabled=false;}
+$('play').addEventListener('click',()=>{if(timer!==null)stop();else autoplay();});$('speed').addEventListener('change',()=>{if(timer!==null)autoplay();});
+function newArray(){const size=Number($('size').value),pool=new Set();while(pool.size<size)pool.add(Math.floor(Math.random()*98)+1);array=[...pool].sort((a,b)=>a-b);target=array[Math.floor(Math.random()*array.length)];restart('새 배열을 만들었어요. 찾을 숫자도 함께 바뀌었어요.');}
+$('shuffle').addEventListener('click',newArray);$('size').addEventListener('change',newArray);
+function setMode(m){if(mode===m)return;mode=m;restart(m==='predict'?'다음 범위를 직접 고르며 한 단계씩 진행해요.':'한 단계씩 진행하거나 자동으로 재생해 보세요.');}
+$('observeMode').addEventListener('click',()=>setMode('observe'));$('predictMode').addEventListener('click',()=>setMode('predict'));
+document.querySelectorAll('[data-choice]').forEach(b=>b.addEventListener('click',()=>{const s=current();if(s.status!=='active')return;const answer=target===array[s.mid]?'found':target<array[s.mid]?'left':'right';if(b.dataset.choice!==answer){$('feedback').className='feedback wrong';$('feedback').textContent='다시 생각해 봐요. 정렬된 배열에서 찾는 수가 가운데 값보다 작은지, 큰지, 같은지 비교해 보세요.';return;}const oldMid=array[s.mid];advance();$('feedback').className='feedback';$('feedback').textContent=answer==='found'?`맞아요! ${target}과 ${oldMid}은 같아요.`:`맞아요! ${target}은 ${oldMid}보다 ${answer==='left'?'작으므로 왼쪽':'크므로 오른쪽'}을 살펴봐요.${current().status==='missing'?' 남은 후보가 없어서 탐색이 끝났어요.':''}`;}));
+$('customForm').addEventListener('submit',e=>{e.preventDefault();try{const parsed=Search.parse($('customArray').value);array=parsed;const sizeSelect=$('size');sizeSelect.querySelector('option[data-custom]')?.remove();if(![7,15,31].includes(array.length)){const opt=new Option(`${array.length}개`,String(array.length));opt.dataset.custom='true';sizeSelect.add(opt);}sizeSelect.value=String(array.length);$('customArray').value=array.join(', ');$('customHelp').className='';$('customHelp').textContent='오름차순으로 정렬하여 적용했어요. 중복된 숫자는 그중 하나를 찾습니다.';restart('입력한 배열을 적용했어요. 찾을 숫자를 바꿔서 실험해 보세요.');}catch(err){$('customHelp').className='error';$('customHelp').textContent=err.message;}});
+document.addEventListener('keydown',e=>{if(e.altKey||e.ctrlKey||e.metaKey||['INPUT','TEXTAREA','SELECT','BUTTON','SUMMARY'].includes(e.target.tagName)||e.target.closest('.array-scroll'))return;if(e.key==='ArrowRight'&&mode==='observe'){e.preventDefault();stop();advance();}if(e.key==='ArrowLeft'){e.preventDefault();previous();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
+render();
+</script>
+</body>
+</html>
